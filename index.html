@@ -173,18 +173,6 @@
                         bodyContainer.classList.add('w-full');
                     }
 
-                    // Format placeholder text
-                    const paragraphs = article.content.split('\n\n');
-                    let formattedContent = '';
-                    paragraphs.forEach((p, index) => {
-                        if (p.trim() !== '') {
-                            // Only add drop cap to the first paragraph if it's not a centered visual feature
-                            const pClass = index === 0 && !article.isDirectImage ? 'drop-cap mb-4' : 'mb-4';
-                            formattedContent += `<p class="${pClass}">${p.trim()}</p>`;
-                        }
-                    });
-                    bodyContainer.innerHTML = formattedContent;
-
                     articlesContainer.appendChild(clone);
                 });
                 
