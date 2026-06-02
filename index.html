@@ -74,7 +74,7 @@
 
         <!-- Footer -->
         <footer class="mt-16 pt-6 border-t-[3px] border-[var(--border-color)] text-center text-sm text-[var(--secondary-ink)] flex flex-col md:flex-row justify-between items-center">
-            <p class="newspaper-title italic">&copy; The Portfolio Interactive Document.</p>
+            <p class="newspaper-title italic">&copy; The Portfolio.</p>
             <p class="mt-2 md:mt-0 uppercase tracking-widest text-xs font-bold">End of Edition</p>
         </footer>
     </div>
@@ -82,18 +82,14 @@
     <!-- Article Template (Hidden) -->
     <template id="article-template">
         <article class="article-item border-b-[1.5px] border-[var(--border-color)] pb-10 mb-10 last:border-0 last:pb-0">
-            <div class="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--accent)] article-category editable-field cursor-text inline-block" contenteditable="true" title="Click to edit category">Category</div>
-            <h3 class="text-4xl md:text-6xl font-bold newspaper-title leading-tight mb-2 article-headline editable-field cursor-text transition-colors" contenteditable="true" title="Click to edit headline">Headline</h3>
+            <div class="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--accent)] article-category editable-field cursor-text inline-block" contenteditable="false" title="Click to edit category">Category</div>
             
-            <div class="text-sm italic text-gray-600 mb-6 pb-2 border-b border-gray-200 article-byline editable-field cursor-text inline-block pr-4" contenteditable="true" title="Click to edit byline">Byline • Date</div>
+            <div class="text-sm italic text-gray-600 mb-6 pb-2 border-b border-gray-200 article-byline editable-field cursor-text inline-block pr-4" contenteditable="false" title="Click to edit byline">Byline • Date</div>
             
             <div class="flex flex-col md:flex-row gap-6 mt-2 layout-wrapper">
                 <div class="md:w-1/3 article-image-container hidden">
                     <img src="" alt="Article visual" class="w-full border border-gray-300 p-1 bg-white article-image-element grayscale hover:grayscale-0 transition-all duration-500">
-                    <p class="text-[10px] text-right mt-1 text-gray-500 article-caption editable-field cursor-text inline-block float-right" contenteditable="true">Staff photo</p>
-                </div>
-                <div class="md:w-2/3 column-layout article-body text-base leading-relaxed text-justify editable-field cursor-text p-2 rounded transition-colors" contenteditable="true" title="Click to edit text">
-                    <!-- Content goes here -->
+                    <p class="text-[10px] text-right mt-1 text-gray-500 article-caption editable-field cursor-text inline-block float-right" contenteditable="false"></p>
                 </div>
             </div>
         </article>
@@ -118,9 +114,22 @@
                     imageUrl: "1.jpg", // Put your image in the same folder as the HTML file
                     isDirectImage: true 
                 },
-                { id: 2, isPlaceholder: true, title: "Secondary Feature Photograph" },
-                { id: 1, isPlaceholder: true, title: "Lead Visual Feature" }
-            ];
+                {
+                    id: 2, 
+                    isPlaceholder: false,
+                    byline: "Yannik Burkard",
+                    date: "20.05.2023",
+                    imageUrl: "2.jpg", // Put your image in the same folder as the HTML file
+                    isDirectImage: true 
+                },
+                {
+                    id: 1, 
+                    isPlaceholder: false,
+                    byline: "Yannik Burkard",
+                    date: "17.02.2023",
+                    imageUrl: "3.jpg", // Put your image in the same folder as the HTML file
+                    isDirectImage: true 
+                },            ];
 
             function renderArticles() {
                 articlesContainer.innerHTML = '';
@@ -144,13 +153,11 @@
                     // Clone the template for an actual article
                     const clone = template.content.cloneNode(true);
                     
-                    clone.querySelector('.article-headline').textContent = article.headline;
                     clone.querySelector('.article-byline').textContent = `${article.byline} • ${article.date}`;
                     clone.querySelector('.article-category').textContent = article.category;
                     
                     const imageContainer = clone.querySelector('.article-image-container');
                     const imageElement = clone.querySelector('.article-image-element');
-                    const bodyContainer = clone.querySelector('.article-body');
                     const layoutWrapper = clone.querySelector('.layout-wrapper');
 
                     if (article.imageUrl) {
@@ -162,15 +169,8 @@
                             imageContainer.classList.remove('md:w-1/3');
                             imageContainer.classList.add('w-full', 'mb-6');
                             
-                            bodyContainer.classList.remove('md:w-2/3', 'column-layout');
-                            bodyContainer.classList.add('w-full', 'text-lg', 'text-center', 'max-w-3xl', 'mx-auto', 'italic');
-                            
                             layoutWrapper.classList.add('flex-wrap');
                         }
-                    } else {
-                        // Adjust layout if no image (though direct uploads will always have one)
-                        bodyContainer.classList.remove('md:w-2/3');
-                        bodyContainer.classList.add('w-full');
                     }
 
                     articlesContainer.appendChild(clone);
