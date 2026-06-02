@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journalist Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --paper-bg: #f4f1ea;
+            --border-color: #2c2c2c;
+            --secondary-ink: #4a4a4a;
+            --accent: #8b0000;
+        }
+        body {
+            background-color: var(--paper-bg);
+            color: var(--ink);
+            font-family: 'Lora', serif;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+        }
+        .newspaper-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .column-layout {
+            column-count: 2;
+            column-gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .column-layout {
+                column-count: 1;
+            }
+        }
+        .drop-cap:first-letter {
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            margin-right: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: var(--ink);
+        }
+        .editable-field:hover, .editable-field:focus {
+            background-color: rgba(0, 0, 0, 0.05);
+            outline: 1px dashed var(--secondary-ink);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 md:px-8">
+
+    <div class="max-w-6xl mx-auto bg-white shadow-xl p-6 md:p-12 border border-gray-300 relative">
+        <!-- Masthead -->
+        <header class="text-center mb-10 border-b-[3px] border-t-[3px] border-[var(--border-color)] py-6 relative">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 text-xs md:text-sm hidden md:block text-left uppercase font-bold tracking-widest text-[var(--secondary-ink)]">
+                <p>Vol. I, No. 1</p>
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-black newspaper-title uppercase tracking-tighter text-[var(--ink)] mb-2">The Portfolio</h1>
+            
+            <div class="mt-4 flex justify-between items-center text-xs md:text-sm uppercase font-bold tracking-widest border-t border-[var(--border-color)] pt-2 text-[var(--secondary-ink)]">
+                <span>Selected Works</span>
+                <span id="current-date"></span>
+                <span>Yannik Burkard</span>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="articles-container" class="min-h-[500px]">
+            <!-- Articles and placeholders will be dynamically injected here -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-16 pt-6 border-t-[3px] border-[var(--border-color)] text-center text-sm text-[var(--secondary-ink)] flex flex-col md:flex-row justify-between items-center">
+            <p class="newspaper-title italic">&copy; The Portfolio Interactive Document.</p>
+            <p class="mt-2 md:mt-0 uppercase tracking-widest text-xs font-bold">End of Edition</p>
+        </footer>
+    </div>
+
+    <!-- Article Template (Hidden) -->
+    <template id="article-template">
+        <article class="article-item border-b-[1.5px] border-[var(--border-color)] pb-10 mb-10 last:border-0 last:pb-0">
+            <div class="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--accent)] article-category editable-field cursor-text inline-block" contenteditable="true" title="Click to edit category">Category</div>
+            <h3 class="text-4xl md:text-6xl font-bold newspaper-title leading-tight mb-2 article-headline editable-field cursor-text transition-colors" contenteditable="true" title="Click to edit headline">Headline</h3>
+            
+            <div class="text-sm italic text-gray-600 mb-6 pb-2 border-b border-gray-200 article-byline editable-field cursor-text inline-block pr-4" contenteditable="true" title="Click to edit byline">Byline • Date</div>
+            
+            <div class="flex flex-col md:flex-row gap-6 mt-2 layout-wrapper">
+                <div class="md:w-1/3 article-image-container hidden">
+                    <img src="" alt="Article visual" class="w-full border border-gray-300 p-1 bg-white article-image-element grayscale hover:grayscale-0 transition-all duration-500">
+                    <p class="text-[10px] text-right mt-1 text-gray-500 article-caption editable-field cursor-text inline-block float-right" contenteditable="true">Staff photo</p>
+                </div>
+                <div class="md:w-2/3 column-layout article-body text-base leading-relaxed text-justify editable-field cursor-text p-2 rounded transition-colors" contenteditable="true" title="Click to edit text">
+                    <!-- Content goes here -->
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Set current date in masthead
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+            const articlesContainer = document.getElementById('articles-container');
+            const template = document.getElementById('article-template');
+
+            // Initial placeholders
+            let articles = [
+                {
+                    id: 3, 
+                    isPlaceholder: false,
+                    headline: "Your Amazing Article Headline",
+                    byline: "By Your Name",
+                    date: "May 2026",
+                    category: "Investigative Journalism",
+                    imageUrl: "Artikel YB FNP 19.04.2023 - Die Metropolregion wächst immer mehr zusammen.jpg", // Put your image in the same folder as the HTML file
+                    content: "This is the first paragraph of your article.\n\nThis is the second paragraph. Notice the '\\n\\n' between them? That creates a line break in the code.",
+                    isDirectImage: true 
+                },
+                { id: 2, isPlaceholder: true, title: "Secondary Feature Photograph" },
+                { id: 1, isPlaceholder: true, title: "Lead Visual Feature" }
+            ];
+
+            function renderArticles() {
+                articlesContainer.innerHTML = '';
+                
+                // Render articles in reverse chronological order (newest first)
+                [...articles].reverse().forEach(article => {
+                    if (article.isPlaceholder) {
+                        const placeholderEl = document.createElement('div');
+                        placeholderEl.className = "border-2 border-dashed border-[var(--border-color)] p-8 mb-10 bg-[var(--paper-bg)] text-center transition-all hover:bg-black/5 hover:border-[var(--accent)] relative group cursor-pointer flex flex-col items-center justify-center min-h-[250px]";
+                        placeholderEl.innerHTML = `
+                            <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleDirectUpload(event, ${article.id})">
+                            <i data-lucide="image-plus" class="w-12 h-12 mb-4 text-[var(--secondary-ink)] group-hover:text-[var(--accent)] transition-colors"></i>
+                            <h3 class="text-2xl font-bold newspaper-title mb-2 uppercase text-[var(--ink)]">${article.title}</h3>
+                            <p class="text-sm italic text-gray-600">Click to upload an image and create a feature.</p>
+                            <p class="text-xs text-gray-500 mt-4 uppercase tracking-widest border-t border-gray-300 pt-2 w-1/2 mx-auto">Publish directly</p>
+                        `;
+                        articlesContainer.appendChild(placeholderEl);
+                        return;
+                    }
+
+                    // Clone the template for an actual article
+                    const clone = template.content.cloneNode(true);
+                    
+                    clone.querySelector('.article-headline').textContent = article.headline;
+                    clone.querySelector('.article-byline').textContent = `${article.byline} • ${article.date}`;
+                    clone.querySelector('.article-category').textContent = article.category;
+                    
+                    const imageContainer = clone.querySelector('.article-image-container');
+                    const imageElement = clone.querySelector('.article-image-element');
+                    const bodyContainer = clone.querySelector('.article-body');
+                    const layoutWrapper = clone.querySelector('.layout-wrapper');
+
+                    if (article.imageUrl) {
+                        imageElement.src = article.imageUrl;
+                        imageContainer.classList.remove('hidden');
+                        
+                        // Adjust layout to feature the image prominently
+                        if (article.isDirectImage) {
+                            imageContainer.classList.remove('md:w-1/3');
+                            imageContainer.classList.add('w-full', 'mb-6');
+                            
+                            bodyContainer.classList.remove('md:w-2/3', 'column-layout');
+                            bodyContainer.classList.add('w-full', 'text-lg', 'text-center', 'max-w-3xl', 'mx-auto', 'italic');
+                            
+                            layoutWrapper.classList.add('flex-wrap');
+                        }
+                    } else {
+                        // Adjust layout if no image (though direct uploads will always have one)
+                        bodyContainer.classList.remove('md:w-2/3');
+                        bodyContainer.classList.add('w-full');
+                    }
+
+                    // Format placeholder text
+                    const paragraphs = article.content.split('\n\n');
+                    let formattedContent = '';
+                    paragraphs.forEach((p, index) => {
+                        if (p.trim() !== '') {
+                            // Only add drop cap to the first paragraph if it's not a centered visual feature
+                            const pClass = index === 0 && !article.isDirectImage ? 'drop-cap mb-4' : 'mb-4';
+                            formattedContent += `<p class="${pClass}">${p.trim()}</p>`;
+                        }
+                    });
+                    bodyContainer.innerHTML = formattedContent;
+
+                    articlesContainer.appendChild(clone);
+                });
+                
+                // Initialize Lucide icons for the newly injected placeholders
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+
+            // Define the global handler for file uploads
+            window.handleDirectUpload = function(event, articleId) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const articleIndex = articles.findIndex(a => a.id === articleId);
+                        if (articleIndex !== -1) {
+                            // Replace placeholder with interactive article data
+                            articles[articleIndex] = {
+                                id: articleId,
+                                headline: "UNTITLED VISUAL WORK",
+                                byline: "By Editor in Chief",
+                                date: new Date().toLocaleDateString('en-US', dateOptions),
+                                category: "Portfolio Feature",
+                                imageUrl: e.target.result,
+                                content: "A descriptive caption or story about this piece. Click anywhere on this text to delete it and write your own story directly on the page.",
+                                isDirectImage: true
+                            };
+                            renderArticles();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            // Initial render
+            renderArticles();
+        });
+    </script>
+</body>
+</html>
